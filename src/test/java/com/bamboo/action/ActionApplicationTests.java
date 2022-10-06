@@ -18,4 +18,10 @@ class ActionApplicationTests {
 		Assertions.assertThat(helloController.hello()).isEqualTo("hello");
 	}
 
+	@Test
+	@DisplayName("Get World")
+	void worldTest() {
+		Assertions.assertThat(helloController.world()).isEqualTo("world");
+	}
+
 }
