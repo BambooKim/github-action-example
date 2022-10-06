@@ -21,7 +21,7 @@ class ActionApplicationTests {
 	@Test
 	@DisplayName("Get World")
 	void worldTest() {
-		Assertions.assertThat(helloController.hello()).isEqualTo("world");
+		Assertions.assertThat(helloController.world()).isEqualTo("world");
 	}
 
 }

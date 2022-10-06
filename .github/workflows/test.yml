@@ -22,6 +22,13 @@ jobs:
       - name: Gr여nt execute permission for gradlew
         run: chmod +x gradlew
 
-        # Gradle test를 실행한다
+        # Gradle Test를 실행한다
       - name: Test with Gradle
         run: ./gradlew --info test
+
+        # Test 후 Report 생성
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
