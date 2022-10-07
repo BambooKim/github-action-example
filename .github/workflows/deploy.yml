@@ -47,4 +47,4 @@ jobs:
           aws s3 cp \
           --region ap-northeast-2 \
           --acl private \
-          ./jar.zip s3://springboot-project/
+          ./jar.zip s3://bamboo-action-prac/
