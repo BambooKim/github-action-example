@@ -24,7 +24,7 @@ jobs:
 
         # Gradle을 통해 프로젝트를 빌드한다
       - name: Build Project
-        run: ./gradlew clean build
+        run: ./gradlew clean build -x test
 
         # 하위 디렉토리 생성
       - name: Make Directory
