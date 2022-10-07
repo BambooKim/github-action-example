@@ -36,7 +36,7 @@ jobs:
 
         # JAR 디렉토리 -> ZIP
       - name: Zip Directory
-        run: zip -r -qq -j ./jar.zip ./deploy
+        run: zip -r -qq -j ./spring-project.zip ./deploy
 
         # S3 Bucket으로 업로드
       - name: Upload Zip File to S3 Bucket
@@ -47,7 +47,7 @@ jobs:
           aws s3 cp \
           --region ap-northeast-2 \
           --acl private \
-          ./jar.zip s3://bamboo-action-prac/
+          ./spring-project.zip s3://bamboo-action-prac/
           
 
         # Deploy
@@ -60,5 +60,5 @@ jobs:
           --application-name github-action-prac \
           --deployment-group-name github-action-prac-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=bamboo-action-prac,bundleType=zip,key=jar.zip \
+          --s3-location bucket=bamboo-action-prac,bundleType=zip,key=spring-project.zip \
           --region ap-northeast-2
