@@ -4,8 +4,14 @@ on:
   push:
     branches: [ main ]    # main 브랜치에 push 시 실행
 
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: bamboo-action-prac
+  CODE_DEPLOY_APPLICATION_NAME: github-action-prac
+  CODE_DEPLOY_GROUP_NAME: github-action-prac-group
+
 jobs:
-  build:
+  build_deploy:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -38,27 +44,28 @@ jobs:
       - name: Zip Directory
         run: zip -r -qq -j ./spring-project.zip ./deploy
 
+        # AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
         # S3 Bucket으로 업로드
       - name: Upload Zip File to S3 Bucket
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws s3 cp \
-          --region ap-northeast-2 \
+          --region ${{ env.AWS_REGION }} \
           --acl private \
-          ./spring-project.zip s3://bamboo-action-prac/
+          ./spring-project.zip s3://${{ env.S3_BUCKET_NAME }}/
           
 
         # Deploy
       - name: Deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws deploy create-deployment \
-          --application-name github-action-prac \
-          --deployment-group-name github-action-prac-group \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_GROUP_NAME }} \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=bamboo-action-prac,bundleType=zip,key=spring-project.zip \
-          --region ap-northeast-2
+          --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=spring-project.zip \
