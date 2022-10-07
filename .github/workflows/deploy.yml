@@ -55,10 +55,11 @@ jobs:
         # S3 Bucket으로 업로드
       - name: Upload Zip File to S3 Bucket
         run: |
-          aws s3 cp \
-          --region ${{ env.AWS_REGION }} \
-          --acl private \
-          ./spring-project.zip s3://${{ env.S3_BUCKET_NAME }}/
+          aws deploy push \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --ignore-hidden-files \
+          --s3-location s3://${{ env.S3_BUCKET_NAME }}/spring-project.zip \
+          --source .
           
 
         # Deploy
